@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tanjong Rhu Future Residences | Interactive VR, AR & AI Tour</title>
+<style>
+:root{--navy:#0a1c2f;--ink:#e9f6ff;--gold:#d5b16b;--cyan:#50d5ef;--muted:#a6bdce}*{box-sizing:border-box}
+body{margin:0;background:#071625;color:var(--ink);font:14px "Segoe UI",Arial,sans-serif}
+header{display:flex;align-items:center;gap:24px;justify-content:space-between;background:#11283c;padding:12px 22px;border-bottom:1px solid #315169;flex-wrap:wrap}
+.brand{font-family:Georgia,serif;font-size:23px;letter-spacing:1px;white-space:nowrap}.brand small{display:block;text-align:center;letter-spacing:5px;font:10px Segoe UI;color:#c4d8e5}
+nav{display:flex;gap:6px;flex-wrap:wrap}button{cursor:pointer;color:white;border:1px solid #46677e;background:#163b52;border-radius:9px;padding:10px 13px;font:inherit}
+button:hover{background:#26617c}button.active{background:#0d86b0;border-color:#81eaff}button.gold{background:#9c7a41;border-color:#e2c07e}
+.notice{padding:8px 22px;background:#1b3042;color:#f4d9a2;font-size:12px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:12px;padding:12px;max-width:1760px;margin:auto}
+.viewer{height:510px;position:relative;overflow:hidden;border:1px solid #41627a;border-radius:13px;background:#061421}
+#photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;transform:translateX(0) scale(1.08);transition:filter .2s;cursor:grab;user-select:none;touch-action:pan-y}
+#photo:active{cursor:grabbing}.viewer:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(90deg,#081a2b8a,transparent 33%,transparent 75%,#061a2988)}
+.unit{position:absolute;top:16px;left:16px;z-index:2;background:#071b2de6;padding:15px 18px;border-radius:11px;max-width:290px}
+.unit strong{font-size:18px}.unit p{margin:7px 0;font-size:12px;color:#c8dce8}
+.marker{position:absolute;z-index:3;background:#08273cdd;border:2px solid #fff;border-radius:30px;color:#fff;padding:7px 12px;box-shadow:0 0 0 5px #d5b16b33;font-size:12px}
+.marker:hover{background:#187fa4}
+#controls{position:absolute;z-index:3;bottom:15px;left:50%;transform:translateX(-50%);background:#091e30df;padding:9px;border-radius:40px;display:flex;gap:7px;max-width:95%;overflow:auto}
+#controls button{border-radius:40px;white-space:nowrap;font-size:12px}
+.sidebar{background:#10283d;border:1px solid #3a627a;border-radius:13px;padding:16px;display:flex;flex-direction:column}
+.sidebar h2{margin:0 0 7px;font-size:19px;color:#e7faff}.sidebar .muted{font-size:12px;color:#aec6d3}
+.chat{background:#071b2c;border-radius:10px;padding:10px;height:250px;overflow:auto;margin:12px 0;flex:1}
+.msg{background:#193c55;padding:9px 11px;border-radius:10px;font-size:12px;line-height:1.45;margin:0 0 8px}.msg.user{background:#086c84;margin-left:20px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:6px}.quick button{font-size:11px;padding:9px 6px}
+.input{display:flex;gap:6px;margin-top:10px}.input input{min-width:0;flex:1;padding:11px;border:1px solid #477087;border-radius:8px;background:#0a2033;color:white}
+.film{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:11px}.thumb{padding:0;overflow:hidden;text-align:left;background:#10283e}.thumb img{width:100%;height:94px;object-fit:cover;display:block}.thumb span{display:block;padding:8px;font-size:12px}.thumb.active{outline:2px solid #56dfff}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:13px}.card{background:#10283d;border:1px solid #355e74;border-radius:12px;padding:16px;min-height:165px}.card h3{margin:0 0 9px;font-size:16px;color:#f0faff}.card p{color:#b5cbda;line-height:1.5;font-size:13px}
+#arOptions{display:none;margin-top:9px;padding:13px;border:1px solid #3e7687;border-radius:10px;background:#102c42}#arOptions.show{display:block}select,input[type=number]{background:#0d3044;color:white;border:1px solid #46748a;border-radius:6px;padding:8px}
+#arSofa{display:none;position:absolute;z-index:3;bottom:28%;left:37%;width:210px;max-width:30%;filter:drop-shadow(0 6px 10px #0008);pointer-events:none}
+#arSofa.show{display:block}#arTag{display:none;position:absolute;z-index:4;bottom:22%;left:38%;background:#061b2dcc;padding:7px;border-radius:8px}#arTag.show{display:block}
+#modal{display:none;position:fixed;inset:0;z-index:50;background:#020a13f7;align-items:center;justify-content:center;flex-direction:column}#modal.open{display:flex}#modal img{max-width:96vw;max-height:80vh;object-fit:contain;transform-origin:center;user-select:none}#modal .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px}.small{color:#b8ceda;font-size:12px}#panel{display:none;position:fixed;inset:8% 12%;z-index:40;background:#10283e;border:1px solid #5a8194;border-radius:16px;padding:24px;overflow:auto;box-shadow:0 0 0 9999px #000a}#panel.open{display:block}#panel h2{margin-top:0}#panelClose{float:right}
+.floor{display:grid;grid-template-columns:1.6fr 1fr;gap:8px;max-width:560px}.floor div{border:2px solid #c4d2d9;border-radius:7px;background:#203e53;text-align:center;padding:26px 10px}.floor div:first-child{grid-row:span 2}
+.loan{display:grid;grid-template-columns:auto 140px;gap:10px;align-items:center;max-width:400px}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.viewer{height:450px}.film{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:1fr 1fr}.sidebar{min-height:400px}#panel{inset:4%}}
+@media(max-width:550px){.brand{font-size:17px}.viewer{height:360px}.unit{padding:10px;max-width:220px}.unit strong{font-size:14px}.film{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}#controls{left:8px;right:8px;transform:none}.marker{font-size:10px}#panel{inset:2%;padding:14px}}
+</style></head><body>
+<header><div class="brand">≋ TANJONG RHU FUTURE RESIDENCES<small>SINGAPORE · CONCEPT SHOWROOM</small></div><nav>
+<button onclick="showPanel('tour')">⌂ Virtual Tour</button><button onclick="showPanel('floor')">▦ Floor Plan</button><button onclick="openHD()">▣ HD Gallery</button><button onclick="showPanel('location')">♧ Location</button><button onclick="showPanel('facilities')">♜ Facilities</button><button class="gold" onclick="showPanel('enquire')">✉ Enquire Now</button></nav></header>
+<div class="notice">AI-generated fictional property concept inspired by Tanjong Rhu. Not real photographs, verified property information or an actual 360° capture.</div>
+<div class="layout"><main>
+<div class="viewer" id="view">
+<img id="photo" alt="AI-generated luxury condominium room photo" draggable="false">
+<div class="unit"><strong>3-Bedroom Premium · Concept</strong><p>1,335 sq ft · High-floor concept · Waterfront-inspired outlook</p><p>🛏 3 Bedrooms &nbsp; 🛁 2 Bathrooms</p></div>
+<button class="marker" id="hotspot" style="top:42%;left:66%" onclick="hotspot()">＋ Explore feature</button>
+<svg id="arSofa" viewBox="0 0 300 170"><ellipse cx="150" cy="155" rx="132" ry="13" fill="#15212a" opacity=".4"/><rect x="25" y="55" width="250" height="88" rx="17" fill="#e4dfd4" stroke="#f4f5f2" stroke-width="4"/><rect x="42" y="18" width="216" height="74" rx="18" fill="#c9c7c4"/><rect x="0" y="73" width="42" height="79" rx="16" fill="#e4dfd4"/><rect x="258" y="73" width="42" height="79" rx="16" fill="#e4dfd4"/><path d="M151 66V139" stroke="#aaa" stroke-width="4"/></svg>
+<div id="arTag">AR-style furniture overlay · illustrative placement</div>
+<div id="controls"><button onclick="next(-1)">◀ Previous</button><button onclick="next(1)">Next ▶</button><button onclick="openHD()">⛶ HD Photo</button><button onclick="togglePan()">↔ Photo pan</button><button onclick="autoTour()">▶ Auto Tour</button><button onclick="stopTour()">■ Stop</button></div>
+</div>
+<div class="film" id="film"></div>
+<div id="arOptions"><b>AR-style furnishing preview</b> (living room only) &nbsp;
+<label> Sofa colour <select onchange="changeSofa(this.value)"><option value="#e4dfd4">Ivory</option><option value="#8aa3b6">Blue-grey</option><option value="#caa875">Sand</option></select></label>
+<button onclick="document.getElementById('arSofa').classList.toggle('show')">Show / Hide Sofa</button>
+<p class="small">Simulated overlay on an AI photo, not calibrated camera-based AR.</p></div>
+<div class="cards"><div class="card"><h3>🏙 Building Exterior</h3><p>Conceptual waterfront condominium architecture. Select <b>Lounge & Facilities</b> to explore additional AI-generated imagery.</p><button onclick="select(4)">Explore concept facilities</button></div>
+<div class="card"><h3>🛋 AR Furniture Studio</h3><p>Try an illustrative sofa overlay and compare colour options while viewing the living room.</p><button onclick="toggleAR()">Open AR-style preview</button></div>
+<div class="card"><h3>📍 Property Information</h3><p>Illustrative unit information, mortgage calculator and Tanjong Rhu neighbourhood overview.</p><button onclick="showPanel('location')">Explore neighbourhood</button></div></div>
+<p class="small" style="padding:10px 0 20px">Photo tour: drag the main image to pan across the original wide photo; click a thumbnail to change scenes. Images are kept in their correct orientation. This is not a complete spherical 360° panorama or a real-world VR reconstruction.</p>
+</main><aside class="sidebar"><h2>✦ AI Property Assistant</h2><div class="muted">Your virtual guide for this fictional demonstration unit</div><div id="chat" class="chat"><div class="msg">Hello! Welcome to the Tanjong Rhu concept tour. Ask about rooms, price, amenities, MRT access or monthly repayments.</div></div>
+<div class="quick"><button onclick="ask('Tell me about this unit')">Unit details</button><button onclick="ask('What is the price?')">Price</button><button onclick="ask('Where is the MRT?')">Nearby MRT</button><button onclick="ask('What facilities are there?')">Facilities</button><button onclick="ask('Estimate monthly loan')">Mortgage</button><button onclick="ask('Can I arrange a viewing?')">Arrange viewing</button></div>
+<div class="input"><input id="question" placeholder="Ask a question…" onkeydown="if(event.key==='Enter')ask()"><button onclick="ask()">➤</button></div><p class="small">AI-style rule-based assistant: no live model or property database connection.</p></aside></div>
+<div id="modal" role="dialog" aria-modal="true"><div class="row"><button onclick="next(-1);openHD()">◀ Previous</button><button onclick="next(1);openHD()">Next ▶</button><button onclick="zoom(-.25)">− Zoom</button><button onclick="zoom(.25)">+ Zoom</button><button onclick="zoom(0,true)">Fit</button><button onclick="document.getElementById('modal').classList.remove('open')">✕ Close</button></div><img id="large" alt="Enlarged original AI-generated property photo"><p class="small" id="largeLabel"></p></div>
+<div id="panel" role="dialog" aria-modal="true"><button id="panelClose" onclick="document.getElementById('panel').classList.remove('open')">✕ Close</button><div id="panelBody"></div></div>
+<script>
+const photos=["assets/7b19c973332584697b8be7e2.jpg", "assets/111d7fb67953b6fe2612bd36.jpg", "assets/06cb8998e2adc5a350555f0a.jpg", "assets/090ad09fe1c775c490ba02e6.jpg", "assets/08446cf55dfb0948d27d587f.jpg"];
+const names=['Living Room','Master Bedroom','Kitchen & Dining','Balcony & View','Lounge & Facilities'];
+const descriptions=['Spacious living room with waterfront-inspired windows.','Calm luxury master bedroom.','Contemporary kitchen and dining space.','Balcony concept with Singapore-inspired skyline.','Shared lounge and facilities concept.'];
+let idx=0,offset=0,dragging=false,start=0,startOffset=0,pan=true,timer=null,zoomLevel=1,ar=false;
+const img=document.getElementById('photo');
+function select(i){idx=(i+photos.length)%photos.length;img.src=photos[idx];img.alt=names[idx]+' — AI-generated fictional property scene';offset=0;movePhoto();document.getElementById('film').innerHTML=names.map((n,j)=>'<button class="thumb '+(j===idx?'active':'')+'" onclick="select('+j+')"><img src="'+photos[j]+'" alt=""><span>'+n+'</span></button>').join('');document.getElementById('hotspot').textContent='＋ '+(idx===0?'Living Room':idx===1?'Bedroom':idx===2?'Kitchen':idx===3?'Balcony':'Facilities');document.getElementById('arSofa').classList.toggle('show',ar&&idx===0);document.getElementById('arTag').classList.toggle('show',ar&&idx===0)}
+function next(n){select(idx+n)}function movePhoto(){img.style.transform='translateX('+offset+'px) scale(1.08)'}
+document.getElementById('view').addEventListener('pointerdown',e=>{if(e.target!==img||!pan)return;dragging=true;start=e.clientX;startOffset=offset;img.setPointerCapture(e.pointerId)});
+document.getElementById('view').addEventListener('pointermove',e=>{if(!dragging)return;offset=Math.max(-95,Math.min(95,startOffset+e.clientX-start));movePhoto()});
+document.getElementById('view').addEventListener('pointerup',()=>dragging=false);document.getElementById('view').addEventListener('pointercancel',()=>dragging=false);
+function togglePan(){pan=!pan;alert(pan?'Photo panning enabled.':'Photo panning paused.')}
+function autoTour(){stopTour();timer=setInterval(()=>next(1),4000)}function stopTour(){if(timer)clearInterval(timer);timer=null}
+function hotspot(){showPanel(idx===3?'location':idx===4?'facilities':'tour')}
+function openHD(){document.getElementById('modal').classList.add('open');document.getElementById('large').src=photos[idx];document.getElementById('largeLabel').textContent=names[idx]+' • AI-generated concept image • Original orientation';zoomLevel=1;document.getElementById('large').style.transform='scale(1)'}
+function zoom(d,reset){zoomLevel=reset?1:Math.max(1,Math.min(3,zoomLevel+d));document.getElementById('large').style.transform='scale('+zoomLevel+')'}
+function toggleAR(){ar=!ar;document.getElementById('arOptions').classList.toggle('show',ar);select(0)}
+function changeSofa(c){document.querySelectorAll('#arSofa rect').forEach(r=>r.setAttribute('fill',c))}
+function addChat(t,who){let el=document.createElement('div');el.className='msg'+(who==='user'?' user':'');el.textContent=t;let c=document.getElementById('chat');c.appendChild(el);c.scrollTop=c.scrollHeight}
+function answer(q){q=q.toLowerCase();if(/price|cost|how much/.test(q))return 'For this fictional demo, the illustrative asking price is S$1.85 million. It is not an actual listing or valuation.';if(/mrt|train|transport/.test(q))return 'Tanjong Rhu MRT is on Singapore’s Thomson-East Coast Line. Exact walking times vary by actual property address.';if(/facility|facilities|pool|gym/.test(q))return 'The fictional condominium concept includes a swimming pool, gym, landscaped garden and lounge.';if(/loan|mortgage|repayment/.test(q))return 'Open Property Information or Enquire Now for an illustrative mortgage calculator. Actual financing depends on eligibility and loan terms.';if(/viewing|book|arrange|agent|enquire/.test(q))return 'This is a classroom demonstration, so no real viewing is available or booked.';if(/room|bed|unit|bath|size|floor/.test(q))return 'Illustrative concept: three bedrooms, two bathrooms and 1,335 sq ft. The design is not an actual floor plan.';if(/ar|sofa|furniture/.test(q))return 'Select AR Furniture Studio to preview an illustrative sofa overlay in the living room.';if(/vr|360|tour/.test(q))return 'This is an interactive wide-photo tour, not full spherical 360° photography. You can pan each scene and open the HD gallery.';return 'I can help with the fictional unit, MRT, facilities, pricing, mortgage illustrations and virtual-tour controls.'}
+function ask(q){q=q||document.getElementById('question').value.trim();if(!q)return;document.getElementById('question').value='';addChat(q,'user');addChat(answer(q),'bot')}
+function showPanel(k){let body=document.getElementById('panelBody');const parts={
+tour:'<h2>Interactive Photo Tour</h2><p>Select any room thumbnail to switch images. Drag the main image to pan across it, or open the HD gallery to zoom in.</p><p><b>VR clarification:</b> These are ordinary wide-format AI-generated photos, not full 360° spherical panoramas. A genuine headset VR tour would require equirectangular panoramas or 3D room models.</p>',
+floor:'<h2>Illustrative Floor Plan</h2><p class="small">Schematic concept only; not a surveyed floor plan or an actual unit layout.</p><div class="floor"><div>Living / Dining<br>Balcony</div><div>Master Bedroom</div><div>Bedroom 2 / 3</div><div>Kitchen</div><div>Bathrooms</div></div>',
+location:'<h2>Location & Nearby Amenities</h2><p>Concept area: Tanjong Rhu, Singapore. Nearby points of interest include Tanjong Rhu MRT (Thomson-East Coast Line), Singapore Sports Hub and East Coast Park.</p><p class="small">No distances, views or amenity availability are verified for a specific unit.</p>',
+facilities:'<h2>Condominium Facilities — Concept</h2><p>Proposed demonstration features: swimming pool, fitness studio, landscaped garden, residents’ lounge and shared social spaces.</p><button onclick="document.getElementById(&quot;panel&quot;).classList.remove(&quot;open&quot;);select(4)">View facilities concept photo</button>',
+enquire:'<h2>Property Enquiry & Mortgage Illustration</h2><p>This fictional concept does not accept real viewing requests. Try an illustrative mortgage calculation:</p><div class="loan"><label>Loan amount (S$)</label><input id="loan" type="number" value="1200000"><label>Interest per year (%)</label><input id="rate" type="number" value="3.5" step=".1"><label>Tenure (years)</label><input id="term" type="number" value="30"></div><p><button onclick="calc()">Calculate</button></p><p id="mortgageResult"></p><p class="small">Excludes fees, taxes, insurance and eligibility checks. Not financial advice.</p>'};
+body.innerHTML=parts[k]||parts.tour;document.getElementById('panel').classList.add('open')}
+function calc(){let p=+document.getElementById('loan').value,r=+document.getElementById('rate').value/1200,n=+document.getElementById('term').value*12;if(p<=0||r<0||n<=0){document.getElementById('mortgageResult').textContent='Enter valid values.';return}let m=r?p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):p/n;document.getElementById('mortgageResult').textContent='Estimated repayment: S$'+Math.round(m).toLocaleString('en-SG')+' per month.'}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('panel').classList.remove('open');document.getElementById('modal').classList.remove('open')}});
+select(0);
+</script></body></html>

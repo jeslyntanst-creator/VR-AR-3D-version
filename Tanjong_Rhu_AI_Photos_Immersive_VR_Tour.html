@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tanjong Rhu • AI Photo Immersive VR Tour</title>
+<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#061523;color:#eef9ff;font:14px Segoe UI,Arial,sans-serif}
+#panel{position:fixed;z-index:10;top:14px;left:14px;width:345px;max-height:calc(100vh - 28px);overflow:auto;padding:17px;background:#061b2be8;border:1px solid #42718a;border-radius:15px;box-shadow:0 8px 30px #0009}
+h1{font-size:19px;color:#74e5f0;margin:0 0 8px}h2{font-size:15px;margin:17px 0 7px}.small{font-size:12px;color:#b5cbd7;line-height:1.45}.rooms{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+button{background:#16405a;border:1px solid #4c8296;color:#f4fcff;border-radius:9px;padding:9px;cursor:pointer;font:inherit}button:hover,button.active{background:#087e90}
+.rooms button{text-align:left;font-size:12px}.rooms img{width:100%;height:75px;object-fit:cover;border-radius:6px;display:block;margin-bottom:5px}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+#chat{height:120px;overflow:auto;background:#081726;padding:10px;border-radius:8px;font-size:12px;line-height:1.45}
+#chat p{margin:0 0 8px}input{background:#0a273b;border:1px solid #426b7d;color:white;padding:9px;border-radius:8px;min-width:0;flex:1}
+#hud{position:fixed;right:14px;top:15px;z-index:9;background:#071c2bdc;padding:12px;border-radius:10px;max-width:280px;font-size:12px}
+#hud strong{color:#75e9f2;font-size:16px}
+#assets{display:none}a-scene{height:100vh;width:100vw}
+#viewer{display:none;position:fixed;inset:0;background:#020b13f5;z-index:40;align-items:center;justify-content:center;flex-direction:column}
+#viewer.open{display:flex}#viewer img{max-width:96vw;max-height:83vh;object-fit:contain;transform-origin:center;cursor:zoom-in}
+#viewer .bar{display:flex;gap:7px;flex-wrap:wrap;padding:10px}
+#viewer p{font-size:12px;color:#bcd2df;margin:3px}
+#toggle{display:none;position:fixed;right:12px;bottom:15px;z-index:20}
+@media(max-width:700px){#panel{width:calc(100vw - 24px);max-height:43vh;left:12px;top:10px}#hud{top:auto;bottom:16px;right:12px}#toggle{display:block}#panel.hidden{display:none}}
+</style></head><body>
+<div id="assets"><img id="img0" src="assets/7b19c973332584697b8be7e2.jpg"><img id="img1" src="assets/111d7fb67953b6fe2612bd36.jpg"><img id="img2" src="assets/06cb8998e2adc5a350555f0a.jpg"><img id="img3" src="assets/090ad09fe1c775c490ba02e6.jpg"><img id="img4" src="assets/08446cf55dfb0948d27d587f.jpg"></div>
+<button id="toggle" onclick="document.getElementById('panel').classList.toggle('hidden')">☰ Tour menu</button>
+<div id="panel"><h1>◈ Tanjong Rhu Future Residences</h1><div class="small">AI-GENERATED CONCEPT PHOTOS • IMMERSIVE PHOTO TOUR • WEBXR</div>
+<h2>Choose a property scene</h2><div id="rooms" class="rooms"></div>
+<div class="row"><button onclick="next(-1)">◀ Previous</button><button onclick="next(1)">Next ▶</button><button onclick="autoTour()">▶ Auto tour</button><button onclick="stopTour()">■ Stop</button><button onclick="openHD()">⛶ HD image</button></div>
+<p class="small">Desktop: drag to look left/right. Headset: use <b>Enter VR</b> on a WebXR-compatible browser over HTTPS. This is a <b>partial panoramic photo projection</b>, not genuine 360° captured imagery; areas outside the photo are a neutral background.</p>
+<h2>AI-style property assistant</h2><div id="chat"><p><b>Guide:</b> Welcome! Ask me about the concept unit, transport, facilities or mortgage estimates.</p></div>
+<div class="row"><button onclick="ask('Unit details')">Unit</button><button onclick="ask('Nearby MRT')">MRT</button><button onclick="ask('Facilities')">Facilities</button><button onclick="ask('Price')">Price</button></div>
+<div class="row"><input id="question" placeholder="Ask a question" onkeydown="if(event.key==='Enter')ask()"><button onclick="ask()">Send</button></div>
+<p class="small">All images and unit details are fictional AI-generated concepts, not verified photographs of any real development. The assistant is rule-based, not connected to an AI model. WebXR headset compatibility depends on the browser and secure hosting.</p></div>
+<div id="hud"><strong id="title">Living Room</strong><div id="caption">Immersive photo view • drag to look</div></div>
+<a-scene background="color:#0d2639" vr-mode-ui="enabled:true" renderer="antialias:true;colorManagement:true">
+<a-assets><img id="tex0" src="assets/7b19c973332584697b8be7e2.jpg"><img id="tex1" src="assets/111d7fb67953b6fe2612bd36.jpg"><img id="tex2" src="assets/06cb8998e2adc5a350555f0a.jpg"><img id="tex3" src="assets/090ad09fe1c775c490ba02e6.jpg"><img id="tex4" src="assets/08446cf55dfb0948d27d587f.jpg"></a-assets>
+<a-entity id="cameraRig" position="0 0 0"><a-camera look-controls wasd-controls="enabled:false" position="0 1.6 0"></a-camera></a-entity>
+<a-entity id="photoCurve" geometry="primitive:cylinder;radius:6;height:6;segmentsRadial:96;thetaStart:205;thetaLength:130;openEnded:true" material="src:#tex0;side:back;shader:flat;transparent:false" position="0 1.6 0"></a-entity>
+<a-circle position="0 -1.46 0" rotation="-90 0 0" radius="6" color="#122d3c"></a-circle>
+</a-scene>
+<div id="viewer"><div class="bar"><button onclick="next(-1);openHD()">◀</button><button onclick="next(1);openHD()">▶</button><button onclick="hdZoom(-.25)">−</button><button onclick="hdZoom(.25)">+</button><button onclick="hdZoom(0,true)">Fit</button><button onclick="document.getElementById('viewer').classList.remove('open')">✕ Close</button></div><img id="hd" alt="AI generated property scene"><p>Original AI-generated concept image. Zoom does not add image detail.</p></div>
+<script>
+const names=['Living Room','Master Bedroom','Kitchen & Dining','Balcony & View','Lounge & Facilities'];
+const desc=['Bright living room with an illustrative waterfront outlook.','Modern master bedroom concept.','Contemporary kitchen and dining inspiration.','Waterfront-inspired balcony concept.','Illustrative shared lounge and amenities.'];
+let current=0,timer=null,z=1;
+const imgs=[...document.querySelectorAll('#assets img')];
+function select(i){current=(i+5)%5;document.getElementById('photoCurve').setAttribute('material','src:#tex'+current+';side:back;shader:flat');document.getElementById('title').textContent=names[current];document.getElementById('caption').textContent=desc[current];document.getElementById('rooms').innerHTML=names.map((n,j)=>'<button class="'+(j===current?'active':'')+'" onclick="select('+j+')"><img src="'+imgs[j].src+'">'+n+'</button>').join('')}
+function next(d){select(current+d)}
+function stopTour(){if(timer)clearInterval(timer);timer=null}
+function autoTour(){stopTour();timer=setInterval(()=>next(1),4500)}
+function openHD(){const im=document.getElementById('hd');im.src=imgs[current].src;document.getElementById('viewer').classList.add('open');z=1;im.style.transform='scale(1)'}
+function hdZoom(d,reset){z=reset?1:Math.max(1,Math.min(4,z+d));document.getElementById('hd').style.transform='scale('+z+')'}
+function reply(q){q=q.toLowerCase();if(/mrt|transport|train/.test(q))return 'Tanjong Rhu is served by the Thomson-East Coast Line. Confirm actual walking distances against a real listing.';if(/price|cost/.test(q))return 'Fictional demonstration asking price: S$1.85 million. Not an actual property quotation.';if(/facilit|pool|gym/.test(q))return 'The concept includes a swimming pool, gym, landscaped gardens and residents lounge.';if(/bed|bath|unit|detail|size/.test(q))return 'Illustrative concept: 3 bedrooms, 2 bathrooms and 1,335 sq ft. Not a real floor plan.';if(/loan|mortgage/.test(q))return 'A real mortgage estimate depends on price, down payment, interest rate, loan term and buyer eligibility.';if(/360|vr|headset/.test(q))return 'On a compatible VR headset, host this file on HTTPS and select Enter VR. The photo covers part of your surrounding view, not a full spherical 360° image.';return 'You can ask me about the fictional unit, price, MRT access, facilities, and immersive tour controls.'}
+function ask(q){q=q||document.getElementById('question').value.trim();if(!q)return;document.getElementById('question').value='';const c=document.getElementById('chat');const p=document.createElement('p');p.textContent='You: '+q;c.appendChild(p);const a=document.createElement('p');a.textContent='Guide: '+reply(q);c.appendChild(a);c.scrollTop=c.scrollHeight}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('viewer').classList.remove('open')});
+select(0);
+</script></body></html>

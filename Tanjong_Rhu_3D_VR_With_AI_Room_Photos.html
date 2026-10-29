@@ -1,0 +1,205 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tanjong Rhu Future Residences | Walkable 3D VR Showroom</title>
+<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#081a2c;color:#f3faff;font-family:Segoe UI,Arial,sans-serif}
+#panel{position:fixed;top:12px;left:12px;z-index:10;width:355px;max-height:calc(100vh - 24px);overflow:auto;background:#081c2feb;border:1px solid #3c6e83;border-radius:15px;padding:17px;box-shadow:0 9px 30px #0009}
+h1{font:22px Georgia,serif;margin:0 0 7px;color:#e8f6ff}h2{font-size:15px;color:#75e5ed;margin:15px 0 8px}
+small,p{color:#b6cfdb;line-height:1.5}small{font-size:11px}p{font-size:12px}
+button{border:1px solid #477c93;background:#163d56;color:#effaff;padding:10px 12px;border-radius:8px;cursor:pointer;font:inherit;font-size:12px}
+button:hover{background:#25647c}button.on{background:#0d8994;border-color:#8deaf0}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}
+#chat{height:110px;overflow:auto;background:#071422;padding:10px;border-radius:8px;font-size:12px;line-height:1.5}
+#chat div{margin:0 0 7px}input{width:100%;background:#09273b;border:1px solid #4c7688;border-radius:7px;color:#fff;padding:9px;margin-top:7px}
+#hud{position:fixed;right:13px;top:13px;z-index:5;background:#09253bdf;padding:13px;border-radius:10px;font-size:12px;max-width:230px}
+#hud strong{font-size:16px;color:#72eaf1}#hide{display:none}
+a-scene{height:100vh;width:100vw}
+@media(max-width:720px){#panel{width:calc(100% - 24px);max-height:46vh;padding:12px}#hud{top:auto;bottom:10px;right:10px}#hide{display:block;position:fixed;right:10px;top:10px;z-index:12}#panel.hidden{display:none}}
+</style></head><body>
+<button id="hide" onclick="document.getElementById('panel').classList.toggle('hidden')">☰ Menu</button>
+<div id="panel">
+<h1>≋ TANJONG RHU FUTURE RESIDENCES</h1>
+<small>FICTIONAL WATERFRONT CONDOMINIUM • FREE-ROAM 3D WALKTHROUGH</small>
+<h2>Walk through the apartment</h2>
+<div class="row"><button onclick="teleport('living')">Living Room</button><button onclick="teleport('bed')">Bedroom</button><button onclick="teleport('kitchen')">Kitchen</button><button onclick="teleport('dining')">Dining</button><button onclick="teleport('balcony')">Balcony</button></div>
+<p><b>Desktop:</b> Click inside the scene, drag to look and use W/A/S/D to walk. <b>VR headset:</b> Host the page over HTTPS and select Enter VR in a compatible headset browser.</p>
+<h2>Interior customisation</h2>
+<div class="row"><button onclick="setSofa('#eee6d9')">Ivory sofa</button><button onclick="setSofa('#7897ae')">Blue sofa</button><button onclick="setSofa('#caa77c')">Sand sofa</button></div>
+<div class="row"><button onclick="setWalls('#e6e2d8')">Warm white</button><button onclick="setWalls('#b6c8c1')">Sage</button><button onclick="toggleNight()">☾ Day / Night</button></div>
+<h2>AI-style virtual property guide</h2>
+<div id="chat"><div><b>Guide:</b> Welcome! Explore the 3D apartment and ask me about this fictional listing.</div></div>
+<div class="row"><button onclick="ask('What is the price?')">Price</button><button onclick="ask('How many bedrooms?')">Unit details</button><button onclick="ask('Nearby MRT?')">MRT</button><button onclick="ask('VR headset?')">VR help</button></div>
+<input id="question" placeholder="Ask about the property…" onkeydown="if(event.key==='Enter')ask()">
+<div class="row"><button onclick="ask()">Send question</button><button onclick="resetPosition()">Reset viewpoint</button></div>
+<p><b>Original AI concept photos:</b> displayed as decorative framed images in the 3D showroom; the walkable rooms themselves are newly modelled 3D geometry.</p>
+<small>Disclosure: This is a functional 3D/WebXR concept, not a photorealistic architectural digital twin. It is not the real Tanjong Rhu Residences, and the layout, views, prices and finishes are fictional. The guide is rule-based. A-Frame requires internet access to load; immersive VR requires compatible hardware and HTTPS hosting.</small>
+</div>
+<div id="hud"><strong id="where">Living Room</strong><br><span id="hint">Free-roam 3D interior • Move with WASD</span></div>
+<a-scene background="color:#9ccde3" renderer="antialias:true; colorManagement:true" vr-mode-ui="enabled:true" shadow="type:pcfsoft" fog="type:linear;color:#9ccde3;near:30;far:85">
+<a-assets><img id="ref0" src="assets/7b19c973332584697b8be7e2.jpg"><img id="ref1" src="assets/111d7fb67953b6fe2612bd36.jpg"><img id="ref2" src="assets/06cb8998e2adc5a350555f0a.jpg"><img id="ref3" src="assets/090ad09fe1c775c490ba02e6.jpg"><img id="ref4" src="assets/08446cf55dfb0948d27d587f.jpg"></a-assets>
+<a-entity id="rig" position="0 0 4">
+<a-camera position="0 1.62 0" look-controls wasd-controls="acceleration:22;fly:false"><a-cursor color="#70f2eb" fuse="false" raycaster="objects:.interactive"></a-cursor></a-camera>
+<a-entity laser-controls="hand:right" raycaster="objects:.interactive;far:12" line="color:#70f2eb"></a-entity></a-entity>
+<a-entity light="type:ambient;intensity:.75;color:#f9f4ed"></a-entity>
+<a-entity id="sun" light="type:directional;intensity:1.15;castShadow:true;shadowMapWidth:1024;shadowMapHeight:1024" position="-5 9 4"></a-entity>
+<a-entity light="type:point;intensity:.75;distance:11;color:#ffe3ad" position="0 3 0"></a-entity>
+<a-entity light="type:point;intensity:.65;distance:10;color:#ffedcc" position="5 3 -2"></a-entity>
+<!-- luxury floor slab, ceiling, room perimeter -->
+<a-box position="0 -.18 0" width="18" height=".34" depth="15" material="color:#bca98f;roughness:.67" shadow="receive:true"></a-box>
+<a-box position="0 3.75 0" width="18" height=".16" depth="15" color="#f5f0e8"></a-box>
+<a-box id="backWall" position="0 1.84 -7.5" width="18" height="3.7" depth=".2" color="#e6e2d8"></a-box>
+<a-box position="-9 1.84 0" width=".2" height="3.7" depth="15" color="#d9d8d1"></a-box>
+<a-box position="9 1.84 0" width=".2" height="3.7" depth="15" color="#d9d8d1"></a-box>
+<!-- feature wall and architectural panels -->
+<a-box position="-7.2 1.8 -7.32" width=".14" height="3.5" depth=".1" color="#a18a71"></a-box>
+<a-box position="-6.8 1.8 -7.32" width=".05" height="3.5" depth=".1" color="#c1a88d"></a-box>
+<a-box position="-6.4 1.8 -7.32" width=".05" height="3.5" depth=".1" color="#c1a88d"></a-box>
+<a-box position="0 3.62 0" width="17.5" height=".05" depth="14.5" material="color:#fff4df;emissive:#ffdca3;emissiveIntensity:.17"></a-box>
+<!-- wide windows looking over waterfront -->
+<a-box position="0 3.43 7.5" width="18" height=".5" depth=".13" color="#e7e5dc"></a-box>
+<a-box position="0 .16 7.5" width="18" height=".3" depth=".13" color="#e7e5dc"></a-box>
+<a-box position="-6 1.86 7.5" width=".13" height="2.9" depth=".14" color="#44515a"></a-box>
+<a-box position="-3 1.86 7.5" width=".1" height="2.9" depth=".14" color="#44515a"></a-box>
+<a-box position="0 1.86 7.5" width=".1" height="2.9" depth=".14" color="#44515a"></a-box>
+<a-box position="3 1.86 7.5" width=".1" height="2.9" depth=".14" color="#44515a"></a-box>
+<a-box position="6 1.86 7.5" width=".13" height="2.9" depth=".14" color="#44515a"></a-box>
+<a-plane position="0 1.86 7.52" width="18" height="2.9" material="color:#b6e3e8;opacity:.11;transparent:true;side:double"></a-plane>
+<!-- balcony deck -->
+<a-box position="0 -.18 9.9" width="18" height=".34" depth="4.7" color="#d0c0a8"></a-box>
+<a-box position="0 .9 12.2" width="18" height=".07" depth=".1" color="#41545e"></a-box>
+<a-box position="0 .4 12.2" width="18" height=".06" depth=".1" color="#41545e"></a-box>
+<a-box position="-8.6 .65 12.2" width=".07" height="1.1" depth=".08" color="#41545e"></a-box>
+<a-box position="-4 .65 12.2" width=".07" height="1.1" depth=".08" color="#41545e"></a-box>
+<a-box position="0 .65 12.2" width=".07" height="1.1" depth=".08" color="#41545e"></a-box>
+<a-box position="4 .65 12.2" width=".07" height="1.1" depth=".08" color="#41545e"></a-box>
+<a-box position="8.6 .65 12.2" width=".07" height="1.1" depth=".08" color="#41545e"></a-box>
+<a-plane position="0 -1.2 26" width="110" height="8" color="#5ea9bd"></a-plane>
+<a-entity id="skyline"></a-entity>
+<!-- living area -->
+<a-plane position="-3 .012 2.5" rotation="-90 0 0" width="6.2" height="4.5" color="#e4d8c8"></a-plane>
+<a-entity id="sofa" position="-3 0 2">
+<a-box position="0 .55 0" width="3.8" height=".46" depth="1.45" material="color:#eee6d9;roughness:.92" shadow="cast:true"></a-box>
+<a-box position="0 1.03 -.64" width="3.8" height=".96" depth=".25" color="#ddd4c8"></a-box>
+<a-box position="-1.78 .76 0" width=".27" height=".74" depth="1.45" color="#e4ddd2"></a-box>
+<a-box position="1.78 .76 0" width=".27" height=".74" depth="1.45" color="#e4ddd2"></a-box>
+<a-box position="-1.0 .92 -.33" width=".9" height=".5" depth=".16" color="#b5c7cf"></a-box>
+<a-box position=".6 .92 -.33" width=".9" height=".5" depth=".16" color="#d2bda8"></a-box>
+</a-entity>
+<a-cylinder position="-3 .36 4.2" radius="1.05" height=".16" material="color:#c8ad8d;metalness:.1;roughness:.28" shadow="cast:true"></a-cylinder>
+<a-cylinder position="-3 .15 4.2" radius=".12" height=".3" color="#756354"></a-cylinder>
+<a-cylinder position="-7 .4 4.7" radius=".36" height=".72" color="#b2a18e"></a-cylinder>
+<a-cone position="-7 1.25 4.7" radius-bottom=".73" radius-top=".02" height="1.3" color="#477b5d"></a-cone>
+<!-- dining -->
+<a-box position="3 .72 3.3" width="2.6" height=".11" depth="1.45" material="color:#a8896b;roughness:.4" shadow="cast:true"></a-box>
+<a-cylinder position="3 .36 3.3" radius=".16" height=".72" color="#69523d"></a-cylinder>
+<a-box position="1.7 .45 3.3" width=".5" height=".11" depth=".6" color="#b9a591"></a-box>
+<a-box position="4.3 .45 3.3" width=".5" height=".11" depth=".6" color="#b9a591"></a-box>
+<a-cylinder position="3 2.8 3.3" radius=".4" height=".08" material="color:#e9c88b;emissive:#c5a266;emissiveIntensity:.3"></a-cylinder>
+<!-- kitchen -->
+<a-box position="-6 .48 -5.7" width="5.5" height=".96" depth=".75" color="#b2a394"></a-box>
+<a-box position="-6 1.0 -5.7" width="5.7" height=".09" depth=".88" material="color:#efede7;roughness:.25"></a-box>
+<a-box position="-6 2.7 -7.2" width="5.6" height=".85" depth=".35" color="#c8c0b5"></a-box>
+<a-box position="-6 .5 -3.6" width="3.3" height=".94" depth="1.05" color="#a99582"></a-box>
+<a-box position="-6 1.0 -3.6" width="3.5" height=".09" depth="1.16" material="color:#f5f1e9;roughness:.22"></a-box>
+<a-cylinder position="-6 1.09 -3.6" radius=".25" height=".03" color="#343a3e"></a-cylinder>
+<a-cylinder position="-5.2 1.09 -3.6" radius=".25" height=".03" color="#343a3e"></a-cylinder>
+<!-- bedroom -->
+<a-box position="4.7 .36 -4.9" width="3.5" height=".62" depth="2.5" color="#bfa994" shadow="cast:true"></a-box>
+<a-box position="4.7 .76 -4.9" width="3.42" height=".16" depth="2.4" color="#eee8df"></a-box>
+<a-box position="4.7 .92 -6.12" width="3.55" height="1.2" depth=".25" color="#b6a391"></a-box>
+<a-box position="3.96 .89 -5.8" width="1.35" height=".17" depth=".58" color="#fffaf0"></a-box>
+<a-box position="5.42 .89 -5.8" width="1.35" height=".17" depth=".58" color="#fffaf0"></a-box>
+<a-box position="2.4 .42 -5.9" width=".66" height=".8" depth=".66" color="#9f856c"></a-box>
+<a-box position="7 .42 -5.9" width=".66" height=".8" depth=".66" color="#9f856c"></a-box>
+<!-- framed AI-generated photo references, not floor-to-ceiling textures -->
+<a-box position="0 2.2 -7.3" width="3.45" height="2.02" depth=".12" color="#243b4a"></a-box>
+<a-plane position="0 2.2 -7.22" width="3.26" height="1.84" material="src:#ref0;shader:flat"></a-plane>
+<a-box position="7.6 2.1 -7.32" width="2.2" height="1.5" depth=".1" color="#263b46"></a-box>
+<a-plane position="7.6 2.1 -7.25" width="2.02" height="1.32" material="src:#ref1;shader:flat"></a-plane>
+<!-- clickable teleport markers -->
+<a-sphere class="interactive" position="-3 1.6 1" radius=".18" color="#13b9c5" onclick="teleport('living')"></a-sphere>
+<a-sphere class="interactive" position="4.7 1.6 -3" radius=".18" color="#13b9c5" onclick="teleport('bed')"></a-sphere>
+<a-sphere class="interactive" position="-6 1.6 -2" radius=".18" color="#13b9c5" onclick="teleport('kitchen')"></a-sphere>
+<a-sphere class="interactive" position="3 1.6 1.7" radius=".18" color="#13b9c5" onclick="teleport('dining')"></a-sphere>
+<a-sphere class="interactive" position="0 1.6 10" radius=".18" color="#13b9c5" onclick="teleport('balcony')"></a-sphere>
+</a-scene>
+<script>
+const spots={living:[-1,0,3.7],bed:[4.7,0,-2.5],kitchen:[-6,0,-2],dining:[3,0,5.1],balcony:[0,0,10.2]};
+const titles={living:'Living Room',bed:'Master Bedroom',kitchen:'Kitchen',dining:'Dining Area',balcony:'Waterfront Balcony'};
+let night=false;
+function teleport(k){document.getElementById('rig').setAttribute('position',spots[k].join(' '));document.getElementById('where').textContent=titles[k]}
+function resetPosition(){teleport('living')}
+function setSofa(c){document.querySelector('#sofa a-box').setAttribute('material','color:'+c+';roughness:.92')}
+function setWalls(c){document.getElementById('backWall').setAttribute('color',c)}
+function toggleNight(){night=!night;document.getElementById('sun').setAttribute('light','type:directional;intensity:'+(night?.12:1.15));document.querySelector('a-scene').setAttribute('background','color:'+(night?'#10233c':'#9ccde3'));document.querySelector('a-scene').setAttribute('fog','type:linear;color:'+(night?'#10233c':'#9ccde3')+';near:30;far:85')}
+function reply(q){q=q.toLowerCase();if(/price|cost/.test(q))return 'Fictional concept asking price: S$1.85 million; this is not a real listing or market quote.';if(/mrt|transport/.test(q))return 'Tanjong Rhu MRT serves the area on the Thomson-East Coast Line. Exact walking distance depends on the real address.';if(/bed|bath|unit|detail/.test(q))return 'Illustrative 3-bedroom, 2-bathroom condominium with a waterfront-inspired balcony.';if(/vr|headset|quest/.test(q))return 'On a compatible headset browser, visit the page over HTTPS and select Enter VR. Desktop users can use mouse and WASD.';if(/furniture|sofa|ar/.test(q))return 'Use the interior customisation controls to change sofa and wall colours in 3D.';return 'I can explain the fictional property, its price, bedrooms, nearby MRT, furniture customisation or VR controls.'}
+function ask(q){q=q||document.getElementById('question').value.trim();if(!q)return;document.getElementById('question').value='';const c=document.getElementById('chat');for(const t of ['You: '+q,'Guide: '+reply(q)]){const el=document.createElement('div');el.textContent=t;c.appendChild(el)}c.scrollTop=c.scrollHeight}
+document.addEventListener('DOMContentLoaded',()=>{const sky=document.getElementById('skyline');for(let i=0;i<35;i++){const h=2+(i*19%13)*.44;const b=document.createElement('a-box');b.setAttribute('position',`${-27+i*1.6} ${h/2-1} 30`);b.setAttribute('width','1.2');b.setAttribute('height',h);b.setAttribute('depth','1.5');b.setAttribute('color',i%4===0?'#91aebc':'#6f91a4');sky.appendChild(b)}});
+</script>
+<style>
+#photoShowcase{position:fixed;z-index:8;right:15px;bottom:16px;width:min(59vw,850px);height:min(53vh,490px);border:2px solid #70dbe9;border-radius:15px;overflow:hidden;background:#06192b;box-shadow:0 14px 48px #000b}
+#photoShowcase img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+#photoShowcase .photoHeading{position:absolute;top:0;left:0;right:0;padding:12px 16px;background:linear-gradient(#071b2bdd,transparent);color:#fff;font-size:18px;font-weight:700;text-shadow:0 1px 5px #000}
+#photoShowcase .photoFooter{position:absolute;bottom:0;left:0;right:0;background:#071b2cde;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;color:#dcecf6;font-size:12px}
+#photoShowcase .photoFooter button{background:#12536a}
+#photoShowcase .photoTag{position:absolute;top:48px;left:12px;background:#063345dd;border:1px solid #68d8e6;border-radius:8px;padding:7px 10px;font-size:12px;display:none}
+#photoShowcase .photoTag.show{display:block}
+#photoShowcase.full{position:fixed;inset:10px;width:auto;height:auto;z-index:50}
+#photoShowcase .miniClose{position:absolute;right:10px;top:8px;z-index:2}
+#photoShowcase .photoDisclaimer{font-size:10px;color:#bfd3e0}
+#photoShowcase .photoFooter span{flex:1}
+#photoSwatch{display:none;position:absolute;bottom:66px;right:18px;border:3px solid #fff;box-shadow:0 0 10px #000a;width:52px;height:52px;border-radius:9px}
+#photoSwatch.show{display:block}
+@media(max-width:800px){#photoShowcase{right:9px;bottom:9px;width:calc(100vw - 18px);height:34vh}#photoShowcase .photoHeading{font-size:14px}#photoShowcase .photoFooter{font-size:10px;padding:6px}}
+</style>
+<div id="photoShowcase" aria-label="AI-generated property room photographs">
+ <img id="showcaseImage" alt="AI-generated luxury condominium interior">
+ <div class="photoHeading" id="showcaseTitle">Living Room — AI Photo</div>
+ <div id="showcaseTag" class="photoTag"></div>
+ <div id="photoSwatch"></div>
+ <button class="miniClose" onclick="document.getElementById('photoShowcase').style.display='none'" title="Hide photo">✕</button>
+ <div class="photoFooter"><span><b>AI-generated concept image</b><br><span class="photoDisclaimer">Not a photograph of an actual Tanjong Rhu property. Customisation swatches are illustrative.</span></span>
+ <button onclick="document.getElementById('photoShowcase').classList.toggle('full')">⛶ Enlarge</button></div>
+</div>
+<script>
+const conceptPhotos=["assets/7b19c973332584697b8be7e2.jpg", "assets/111d7fb67953b6fe2612bd36.jpg", "assets/06cb8998e2adc5a350555f0a.jpg", "assets/090ad09fe1c775c490ba02e6.jpg", "assets/08446cf55dfb0948d27d587f.jpg"];
+const photoNames={living:'Living Room',bed:'Master Bedroom',kitchen:'Kitchen & Dining',dining:'Kitchen & Dining',balcony:'Balcony & View'};
+const photoIndexes={living:0,bed:1,kitchen:2,dining:2,balcony:3};
+let selectedRoom='living';
+function showRoomPhoto(k){
+ selectedRoom=k;
+ const panel=document.getElementById('photoShowcase');
+ panel.style.display='block';
+ document.getElementById('showcaseImage').src=conceptPhotos[photoIndexes[k]];
+ document.getElementById('showcaseImage').alt='AI-generated concept photo: '+photoNames[k];
+ document.getElementById('showcaseTitle').textContent=photoNames[k]+' — AI Photo';
+ const tag=document.getElementById('showcaseTag');tag.classList.remove('show');
+ document.getElementById('photoSwatch').classList.remove('show');
+}
+function photoCustomise(kind,value){
+ showRoomPhoto('living');
+ const tag=document.getElementById('showcaseTag');
+ tag.classList.add('show');
+ const swatch=document.getElementById('photoSwatch');
+ if(kind==='sofa'){
+   tag.textContent='Sofa colour selection: '+value.label+' (preview swatch)';
+   swatch.style.background=value.color;swatch.classList.add('show');
+ }else if(kind==='wall'){
+   tag.textContent='Wall colour selection: '+value.label+' (3D model updated)';
+   swatch.style.background=value.color;swatch.classList.add('show');
+ }else{
+   tag.textContent=value.label+' lighting selected in the 3D model';
+ }
+}
+// Wrap the existing buttons' JavaScript actions, preserving 3D navigation.
+const oldTeleport=teleport;
+teleport=function(k){oldTeleport(k);showRoomPhoto(k)};
+const oldSetSofa=setSofa;
+setSofa=function(c){oldSetSofa(c);let labels={'#eee6d9':'Ivory','#7897ae':'Blue','#caa77c':'Sand'};photoCustomise('sofa',{label:labels[c]||'Custom',color:c})};
+const oldSetWalls=setWalls;
+setWalls=function(c){oldSetWalls(c);photoCustomise('wall',{label:c==='#e6e2d8'?'Warm white':'Sage',color:c})};
+const oldToggleNight=toggleNight;
+toggleNight=function(){oldToggleNight();photoCustomise('light',{label:night?'Night':'Day'})};
+showRoomPhoto('living');
+</script>
+</body></html>
